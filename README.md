@@ -10,6 +10,10 @@ This project leverages python 3.7.11 with the following packages:
 
 * [pandas](https://pandas.pydata.org) - Use the Pandas library, along with JupyterLab, to collect, prepare and analyze data.
 
+* [pathlib](https://docs.python.org/3/library/pathlib.html) - Allows for consistent input of source csv files.
+
+* [numpy](https://numpy.org) - Numerical computing tools, specifically the square root function for this project.
+
 * [matplotlib](https://matplotlib.org) - For plotting the data on line graphs and box plots.
 
 ---
@@ -21,6 +25,7 @@ Before running the application first import the following libraries:
 ```python
   import pandas as pd
   from pathlib import Path
+  import numpy as np
   %matplotlib inline
 ```
 
@@ -28,43 +33,39 @@ Before running the application first import the following libraries:
 
 ## Usage and Summary Analysis
 
-To run the loan Crypto Arbitrage analysis, simply clone the repository and then run Jupyter Lab to open the Jupyter notebook.
+To run the Risk Return Analysis, simply clone the repository and then run Jupyter Lab to open the Jupyter notebook named risk_return_analysis.ipynb.
 
 Upon launching, the Jupyter notebook flows as follows:
 
-1.  Collects the data stored in the Resources folder and stores in dataframes, using the Timestamp for an index.
+We first import the fund data stored in the Resources folder, calculate the daily percentage returns for each portfolio and store these in a dataframe to be used in our Quantitative Analysis.
 
-2.  Prepares the data by dropping records with missing values, removing any $ signs in order to convert those records from strings to floats, and finally by confirming that there were no duplicated records.
+1.  Analyze the Performance.  Not one of the four funds we looked at came close to outperforming the S&P 500 Index.  Berkshire Hathaway was clearly the best performer of the four, and the Tiger Global portfolio was the only other one that earned positive returns over the 6 years we examined.
 
-3.  Analyzing the data by creating summary statistics for each dataframe as well as initial data visualizations, including the following plot overlay showing prices for both the Bitstamp and Coinbase exchanges for the entire 3 month period.  The areas showing blue over yellow indicate time where the price for Bitcoin is higher on Bitstamp than it is on Coinbase, indicating possible arbitrage opportunites. 
+    ![Cumulative Returns](Images/cumulative_returns.png)
 
-![Sample Bitcoin Price Plot](Images/Bitstamp_vs_Coinbase_2018_Jan_to_Mar.png)
+2.  Analyze the Volatility.  Box plots were used to determine that the S&P 500 was far more volatile than any of the four portfolios.  Of these four portfolios, Berkshire Hathaway was the most volatile, while Tiger Global showed the least amount of volatility.
 
-4. Following this preliminary data analysis, each month was looked at separately in order to get an even better look at the data.  From there, three separate dates were chosen (one for each month) to represent the most likely days for successul Bitcoin arbitrage.  Each of these dates were analyzed in more detail, with the hopes of being able to draw conclusions as to any patterns or trends for arbitrage opportunities on the two Bitcoin exchanges.  
+    ![Daily Returns Boxplot](Images/daily_returns_boxplots.png)
 
-5. Key finding for each of the three dates selected:
-    * January 28 - Bitstamp prices were more than 1 percent higher than Coinbase prices for 1,378 minutes, nearly 23 hours!  The average arbitrage profit spread, net of transaction fees, was $140 per Bitcoin on this day.
+3.  Analyze the Risk.  The annualized standard deviations of the rolling 21-day averages show that all four portfolios pose significantly less risk than the S&P 500 index. Berkshire Hathaway carried the most risk of the four, but Tiger Global has matched it the past couple of years.  The risk of each of the four funds have been trending up recently.
+
+    ![Rolling 21_Day Risk](Images/rolling_21day_sd.png)
     
-    ![January 28 Cumulative Returns](Images/Cumulative_Returns_20180128.png)
-    
-    * February 6 - Arbitrage opportunites existed for just 110 minutes on this day.  And the average profit spread had dropped to about $30 per Bitcoin.
-    
-    ![February 6 Cumulative Returns](Images/Cumulative_Returns_20180206.png)
-    
-    * March 14 - A very brief 4 minutes worth of arbitrage trading opportunites existed.  At least the average net profit per Bitcoin trade was up a bit to $35.
-    
-    ![March 14 Cumulative Returns](Images/Cumulative_Returns_20180314.png)
-    
+4.  Analyze the Risk-Return Profile.  Using Sharpe ratios of annualized returns and standard deviations for each portfolio, we can safely eliminate the Paulson & Co and the Soros Fund from consideration.  The inability of both of these funds to generate positive returns is more than enough to offset their relatively low risk and volatility.  Of the remaining portfolios, Tiger Global has a Sharpe ratio nearly identical to that of the S&P 500, while Berkshire Hathaway has the best Sharpe ratio of all.
 
-6. While the opportunities for Bitcoin arbitrage situations still existed in early 2018, these situations decreased drastically from January through the end of March of that year.  On top of that, when arbitrage situations did pop up, they lasted for only a few minutes.  On one of the best Bitcoin arbitrage days from January or 2018 (the 28th), one could make almost $200,000 just by buying one Bitcoin on Coinbase and then immediately selling it on Bitstamp.  And doing this once a minute pretty much uninterrupted for the entire day.  By February of that year, on the 6th, there were only a few hours throughout the day that one could do this.  And the amount of profit per trade was much smaller than it had been in the previous month.  Daily profits had dropped to just over $3000.  And in March, there were only a handful of minutes, throughout the entire month, where one could profit through Bitcoin arbitrage.  Perhaps the best day of March was on the 14th, and only $138 of profit could be made.  The arbitrage period lasted just 3 minutes that day.  Still worth it if these trades are entirely automated, but not worth the cost of having a paid employee monitor and exact the trades.
+    ![Sharpe Ratios](Images/sharpe_ratios.png)
+    
+5.  Diversify the Portfolio.  With a much higher Beta than the Tiger Global portfolio, the Berkshire Hathaway portfolio is more sensitive to movements in the S&P 500.  However, recent trends show that Tiger Global's beta has been on the rise.  This means that Tiger's biggest advantage over Berkshire Hathaway, specifically its lower risk of fluctuating wildly with market swings, has been diminished as of recently.  The 60-day rolling beta for Berkshire Hathaway had been significantly higher than that of Tiger Global for the past 4 years or so, but these betas have been much closer to each other since March of 2020.  See the graph below for visualizations of each fund's rolling 60-day betas:
 
-7. Of course, these cumulative profit sums are somewhat constrained by a few assumptions we have used throughout our analysis.  First, we are not technically limited to buying and selling just one Bitcoin at a time.  Each time an arbitrage opportunity presents itself, we could buy and sell much more in order to maximize profits.  However, the more we buy and sell, the faster the prices on Coinbase and Bitstamp will converge and the arbitrage opportunity will be gone that much sooner.  Secondly, we could use any profits realized from arbitrage buying opportunities to immediately reinvest in current or future arbitrage opportunities.  This would allow for a more robust compounding of investment returns.
+    ![Rolling Beta](Images/tiger_berkshire_rolling_beta.png)
+    
+The Berkshire Hathaway portfolio is my recommendation.  Compared to Tiger Global Management, it has the greatest risk-return profile based on their respective Sharpe ratios.  The Tiger portfolio could be considered a better fit for investors who are at or near their retirement, since it offers very low risk (though that risk has been trending upwards) but still provides a postive investment return.  And for the youngest of investors just out of college and starting their retirement savings, an S&P 500 Index Fund could be a good fit with its high risk but high return potential.  But if we can only add one fund to our list of investment options, the Berkshire Hathaway portfolio offers the best mix of those other two.
 
 ---
 
 ## Contributors
 
-Starter code was provided by UW Fintech Bootcamp.  Updates and analysis by Jason Buckholt.  A significant departure from the instructions listed was to reduce any and all profits per trade by the 1 percent transaction fees.  For example, if Bitcoin was listed at 10,000 on Coinbase, the instructions correctly pointed out that only prices above 10,100 (1 percent higher) on Bitstamp would be profitable enough to cover the transaction fees.  However, if the price on Bitstamp was 10,200, the instructions as written would have this giving us a profit of 200 when it should be only 100 - 10,200 (Bitstamp) minus 10,000 (Coinbase) minus 100 (1 percent transaction fee).  I assumed this was an oversight so I added in an extra calculation to back out the transaction cost. 
+Starter code was provided by UW Fintech Bootcamp.  Updates and analysis by Jason Buckholt.  
 
 ---
 
